@@ -27,7 +27,7 @@ public class UserServiceImpl implements IUserService {
     UserMapper userMapper;
 
     @Override
-    public User addUser(UserCreationRequest userCreationRequest) {
+    public UserResponse addUser(UserCreationRequest userCreationRequest) {
 
        boolean isExistsUsername = this.userRepository.existsByUsername(userCreationRequest.getUsername());
 
@@ -35,13 +35,17 @@ public class UserServiceImpl implements IUserService {
            throw new AppException(ErrorCode.USER_EXISTED);
        }
         User user = userMapper.toUser(userCreationRequest);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
-        return user;
+        return userMapper.toUserResponse(user);
     }
 
     @Override
-    public List<User> getUsers() {
-        return userRepository.findAll();
+    public List<UserResponse> getUsers() {
+        return this.userRepository.findAll()
+                .stream()
+                .map(userMapper::toUserResponse)
+                .toList();
     }
 
     @Override

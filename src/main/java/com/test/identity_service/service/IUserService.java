@@ -8,8 +8,8 @@ import com.test.identity_service.entity.User;
 import java.util.List;
 
 public interface IUserService {
-    User addUser(UserCreationRequest userCreationRequest);
-    List<User> getUsers();
+    UserResponse addUser(UserCreationRequest userCreationRequest);
+    List<UserResponse> getUsers();
     UserResponse getUser(String id);
     UserResponse updateUser (String id, UserCreationRequest userCreationRequest);
     UserResponse deleteUser (String id);

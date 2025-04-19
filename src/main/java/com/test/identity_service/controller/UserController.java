@@ -23,17 +23,24 @@ public class UserController {
     IUserService iUserService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<User>> addUser(@RequestBody @Valid UserCreationRequest userCreationRequest){
-        User user = this.iUserService.addUser(userCreationRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<User>builder().status(201).message("Created User successfully")
-                        .data(user)
+    public ResponseEntity<ApiResponse<UserResponse>> addUser(@RequestBody @Valid UserCreationRequest userCreationRequest){
+        UserResponse userResponse = this.iUserService.addUser(userCreationRequest);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.<UserResponse>builder()
+                        .status(201)
+                        .message("Created User successfully")
+                        .data(userResponse)
                 .build());
     }
 
     @GetMapping
-    public ResponseEntity<?> getUsers(){
-        List<User> users = this.iUserService.getUsers();
-        return ResponseEntity.ok().body(users);
+    public ResponseEntity<ApiResponse<List<UserResponse>>> getUsers(){
+        List<UserResponse> userResponseList = this.iUserService.getUsers();
+        return ResponseEntity.ok().body(ApiResponse.<List<UserResponse>>builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Get Users successfully")
+                        .data(userResponseList)
+                .build());
     }
 
     @GetMapping("/{userId}")
