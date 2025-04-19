@@ -1,15 +1,18 @@
 package com.test.identity_service.service.impl;
 
 import com.test.identity_service.dto.request.UserCreationRequest;
+import com.test.identity_service.dto.response.UserResponse;
 import com.test.identity_service.entity.User;
 import com.test.identity_service.exception.AppException;
 import com.test.identity_service.exception.ErrorCode;
+import com.test.identity_service.mapper.UserMapper;
 import com.test.identity_service.repository.UserRepository;
 import com.test.identity_service.service.IUserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +23,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class UserServiceImpl implements IUserService {
     UserRepository userRepository;
+    PasswordEncoder passwordEncoder;
+    UserMapper userMapper;
 
     @Override
     public User addUser(UserCreationRequest userCreationRequest) {
@@ -29,13 +34,7 @@ public class UserServiceImpl implements IUserService {
        if(isExistsUsername){
            throw new AppException(ErrorCode.USER_EXISTED);
        }
-
-        User user = new User();
-        user.setUsername(userCreationRequest.getUsername());
-        user.setPassword(userCreationRequest.getPassword());
-        user.setFirstName(userCreationRequest.getFirstName());
-        user.setLastName(userCreationRequest.getLastName());
-        user.setDob(userCreationRequest.getDob());
+        User user = userMapper.toUser(userCreationRequest);
         userRepository.save(user);
         return user;
     }
@@ -46,26 +45,22 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public User getUser(String id) {
-        return userRepository.findById(id).orElseThrow(()->new RuntimeException("User not found"));
+    public UserResponse getUser(String id) {
+        return userMapper.toUserResponse(userRepository.findById(id).orElseThrow(()->new RuntimeException("User not found")));
     }
 
     @Override
-    public User updateUser(String id, UserCreationRequest userCreationRequest) {
-        User user = getUser(id);
-        user.setUsername(userCreationRequest.getUsername());
-        user.setPassword(userCreationRequest.getPassword());
-        user.setFirstName(userCreationRequest.getFirstName());
-        user.setLastName(userCreationRequest.getLastName());
-        user.setDob(userCreationRequest.getDob());
+    public UserResponse updateUser(String id, UserCreationRequest userCreationRequest) {
+        User user = userRepository.findById(id).orElseThrow(()->new RuntimeException("User not found"));
+        userMapper.updateUser(user,userCreationRequest);
         userRepository.save(user);
-        return user;
+        return userMapper.toUserResponse(user);
     }
 
     @Override
-    public User deleteUser(String id) {
-        User user = getUser(id);
+    public UserResponse deleteUser(String id) {
+        User user = userRepository.findById(id).orElseThrow(()->new RuntimeException("User not found"));
         this.userRepository.delete(user);
-        return user;
+        return userMapper.toUserResponse(user);
     }
 }

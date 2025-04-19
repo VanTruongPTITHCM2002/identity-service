@@ -2,6 +2,7 @@ package com.test.identity_service.controller;
 
 import com.test.identity_service.dto.request.UserCreationRequest;
 import com.test.identity_service.dto.response.ApiResponse;
+import com.test.identity_service.dto.response.UserResponse;
 import com.test.identity_service.entity.User;
 import com.test.identity_service.service.IUserService;
 import jakarta.validation.Valid;
@@ -36,21 +37,21 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<?> getUser (@PathVariable String userId){
-        User user = this.iUserService.getUser(userId);
-        return ResponseEntity.ok().body(user);
+    public ResponseEntity<UserResponse> getUser (@PathVariable String userId){
+        UserResponse userResponse = this.iUserService.getUser(userId);
+        return ResponseEntity.ok().body(userResponse);
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<?> updateUser (@PathVariable String userId, @RequestBody UserCreationRequest userCreationRequest){
-        User user = this.iUserService.updateUser(userId,userCreationRequest);
-        return ResponseEntity.ok().body(user);
+    public ResponseEntity<UserResponse> updateUser (@PathVariable String userId, @RequestBody UserCreationRequest userCreationRequest){
+        UserResponse userResponse = this.iUserService.updateUser(userId,userCreationRequest);
+        return ResponseEntity.ok().body(userResponse);
     }
 
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<?> deleteUser(@PathVariable String userId){
-        User user = this.iUserService.deleteUser(userId);
-        return ResponseEntity.ok().body("delete user successfully");
+    public ResponseEntity<UserResponse> deleteUser(@PathVariable String userId){
+        UserResponse userResponse = this.iUserService.deleteUser(userId);
+        return ResponseEntity.ok().body(null);
     }
 }

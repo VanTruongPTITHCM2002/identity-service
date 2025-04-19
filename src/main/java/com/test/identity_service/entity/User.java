@@ -3,16 +3,19 @@ package com.test.identity_service.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Entity
 @Table(name = "user")
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
-@Getter
+@DynamicInsert
+@DynamicUpdate
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
     @Id
@@ -21,7 +24,7 @@ public class User {
 
     @Column(nullable = false,length = 100)
     String username;
-    @Column(nullable = false,length = 50)
+    @Column(nullable = false,length = 255)
     String password;
     @Column(nullable = false,length = 100)
     String firstName;
