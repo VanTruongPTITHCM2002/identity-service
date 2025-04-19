@@ -1,7 +1,14 @@
 package com.test.identity_service.service;
 
+import com.nimbusds.jose.JOSEException;
 import com.test.identity_service.dto.request.AuthenticationRequest;
+import com.test.identity_service.dto.request.InstropectRequest;
+import com.test.identity_service.dto.response.AuthenticationResponse;
+import com.test.identity_service.dto.response.IntrospectResponse;
+
+import java.text.ParseException;
 
 public interface IAuthentcationService {
-    boolean authenticate(AuthenticationRequest authenticationRequest);
+    AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) throws JOSEException;
+    IntrospectResponse introspect (InstropectRequest instropectRequest) throws JOSEException, ParseException;
 }
