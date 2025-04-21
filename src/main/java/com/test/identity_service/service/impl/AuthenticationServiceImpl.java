@@ -9,6 +9,7 @@ import com.test.identity_service.dto.request.AuthenticationRequest;
 import com.test.identity_service.dto.request.InstropectRequest;
 import com.test.identity_service.dto.response.AuthenticationResponse;
 import com.test.identity_service.dto.response.IntrospectResponse;
+import com.test.identity_service.entity.User;
 import com.test.identity_service.exception.AppException;
 import com.test.identity_service.exception.ErrorCode;
 import com.test.identity_service.repository.UserRepository;
@@ -20,11 +21,13 @@ import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.StringJoiner;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +48,7 @@ public class AuthenticationServiceImpl implements IAuthentcationService {
         if(!authenticated){
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
-        String token = generateToken(user.getUsername());
+        String token = generateToken(user);
         return AuthenticationResponse.builder()
                 .authenticated(true)
                 .token(token)
@@ -68,21 +71,29 @@ public class AuthenticationServiceImpl implements IAuthentcationService {
                 .build();
     }
 
-    private String generateToken(String username) throws JOSEException {
+    private String generateToken(User user) throws JOSEException {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(username)
+                .subject(user.getUsername())
                 .issuer("jod.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(
                         Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
                 ))
-                .claim("customClaim","jod")
+                .claim("scope",buildScope(user))
                 .build();
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
         JWSObject jwsObject = new JWSObject(header,payload);
 
         jwsObject.sign(new MACSigner(SECRET_KEY.getBytes()));
         return jwsObject.serialize();
+    }
+
+    private String buildScope(User user){
+        StringJoiner stringJoiner = new StringJoiner(" ");
+        if(!CollectionUtils.isEmpty(user.getRoles())){
+            user.getRoles().forEach(stringJoiner::add);
+        }
+        return stringJoiner.toString();
     }
 }

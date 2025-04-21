@@ -7,6 +7,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Table(name = "user")
@@ -16,12 +17,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @DynamicInsert
 @DynamicUpdate
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
-
     @Column(nullable = false,length = 100)
     String username;
     @Column(nullable = false,length = 255)
@@ -32,4 +33,6 @@ public class User {
     String lastName;
 
     LocalDate dob;
+
+    Set<String> roles;
 }

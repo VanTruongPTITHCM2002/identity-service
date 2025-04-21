@@ -3,6 +3,7 @@ package com.test.identity_service.service.impl;
 import com.test.identity_service.dto.request.UserCreationRequest;
 import com.test.identity_service.dto.response.UserResponse;
 import com.test.identity_service.entity.User;
+import com.test.identity_service.enums.Role;
 import com.test.identity_service.exception.AppException;
 import com.test.identity_service.exception.ErrorCode;
 import com.test.identity_service.mapper.UserMapper;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -34,10 +36,15 @@ public class UserServiceImpl implements IUserService {
        if(isExistsUsername){
            throw new AppException(ErrorCode.USER_EXISTED);
        }
-        User user = userMapper.toUser(userCreationRequest);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-        return userMapper.toUserResponse(user);
+
+       HashSet<String> roles = new HashSet<>();
+       roles.add(Role.USER.name());
+
+       User user = userMapper.toUser(userCreationRequest);
+       user.setPassword(passwordEncoder.encode(user.getPassword()));
+       user.setRoles(roles);
+       userRepository.save(user);
+       return userMapper.toUserResponse(user);
     }
 
     @Override
