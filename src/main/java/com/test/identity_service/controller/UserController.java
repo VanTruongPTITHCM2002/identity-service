@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +26,7 @@ public class UserController {
     IUserService iUserService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<UserResponse>> addUser(@RequestBody @Valid UserCreationRequest userCreationRequest){
         UserResponse userResponse = this.iUserService.addUser(userCreationRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -51,6 +54,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
+    @PostAuthorize("hasRole('ADMIN') || returnObject.body.username == authentication.name")
     public ResponseEntity<UserResponse> getUser (@PathVariable String userId){
         UserResponse userResponse = this.iUserService.getUser(userId);
         return ResponseEntity.ok().body(userResponse);
