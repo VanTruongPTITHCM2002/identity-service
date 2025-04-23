@@ -43,7 +43,7 @@ public class UserServiceImpl implements IUserService {
 
        User user = userMapper.toUser(userCreationRequest);
        user.setPassword(passwordEncoder.encode(user.getPassword()));
-       user.setRoles(roles);
+      // user.setRoles(roles);
        userRepository.save(user);
        return userMapper.toUserResponse(user);
     }

@@ -34,5 +34,6 @@ public class User {
 
     LocalDate dob;
 
-    Set<String> roles;
+    @ManyToMany
+    Set<Role> roles;
 }

@@ -35,13 +35,13 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((request) -> request
                         .requestMatchers(HttpMethod.POST,PUBLIC_URL).permitAll()
-                        .requestMatchers(HttpMethod.GET,"api/v1/users")
-                        .hasRole(Role.ADMIN.name())
+                        .requestMatchers(HttpMethod.GET,"api/v1/users").authenticated()
                         .anyRequest().authenticated()
                 ) .formLogin(AbstractHttpConfigurer::disable)
                 .oauth2ResourceServer(oauth2 ->
                         oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                                .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                 );
 
         return http.build();

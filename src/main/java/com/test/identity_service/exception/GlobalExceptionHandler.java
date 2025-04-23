@@ -3,6 +3,7 @@ package com.test.identity_service.exception;
 import com.test.identity_service.dto.response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -46,9 +47,19 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AppException.class)
     ResponseEntity<ApiResponse<String>> handleAppException(AppException ae){
         ErrorCode errorCode = ae.getErrorCode();
-        return ResponseEntity.badRequest()
+        return ResponseEntity.status(errorCode.getHttpStatusCode())
                 .body(ApiResponse.<String>builder()
                         .status(errorCode.getCode())
                         .message(errorCode.getMessage())
                         .build());    }
+
+    @ExceptionHandler(value = AccessDeniedException.class)
+    ResponseEntity<ApiResponse<String>> handleAccessDeniedException(AccessDeniedException ade){
+        ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
+        return ResponseEntity.status(errorCode.getHttpStatusCode())
+                .body(ApiResponse.<String>builder()
+                        .status(errorCode.getCode())
+                        .message(errorCode.getMessage())
+                        .build());
+    }
 }
