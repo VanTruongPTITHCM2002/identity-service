@@ -1,12 +1,14 @@
 package com.test.identity_service.service.impl;
 
 import com.test.identity_service.dto.request.UserCreationRequest;
+import com.test.identity_service.dto.request.UserUpdateRequest;
 import com.test.identity_service.dto.response.UserResponse;
+import com.test.identity_service.entity.Role;
 import com.test.identity_service.entity.User;
-import com.test.identity_service.enums.Role;
 import com.test.identity_service.exception.AppException;
 import com.test.identity_service.exception.ErrorCode;
 import com.test.identity_service.mapper.UserMapper;
+import com.test.identity_service.repository.RoleRepository;
 import com.test.identity_service.repository.UserRepository;
 import com.test.identity_service.service.IUserService;
 import lombok.AccessLevel;
@@ -28,6 +30,7 @@ public class UserServiceImpl implements IUserService {
     UserRepository userRepository;
     PasswordEncoder passwordEncoder;
     UserMapper userMapper;
+    RoleRepository roleRepository;
 
     @Override
     public UserResponse addUser(UserCreationRequest userCreationRequest) {
@@ -38,12 +41,13 @@ public class UserServiceImpl implements IUserService {
            throw new AppException(ErrorCode.USER_EXISTED);
        }
 
-       HashSet<String> roles = new HashSet<>();
-       roles.add(Role.USER.name());
+       HashSet<Role> roles = new HashSet<>();
+       var role = this.roleRepository.findById("USER").orElse(null);
+       roles.add(role);
 
        User user = userMapper.toUser(userCreationRequest);
        user.setPassword(passwordEncoder.encode(user.getPassword()));
-      // user.setRoles(roles);
+       user.setRoles(roles);
        userRepository.save(user);
        return userMapper.toUserResponse(user);
     }
@@ -62,9 +66,13 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public UserResponse updateUser(String id, UserCreationRequest userCreationRequest) {
+    public UserResponse updateUser(String id, UserUpdateRequest userUpdateRequest) {
         User user = userRepository.findById(id).orElseThrow(()->new RuntimeException("User not found"));
-        userMapper.updateUser(user,userCreationRequest);
+        userMapper.updateUser(user,userUpdateRequest);
+        user.setPassword(passwordEncoder.encode(userUpdateRequest.getPassword()));
+        var roles = this.roleRepository.findAllById(userUpdateRequest.getRoles());
+
+        user.setRoles(new HashSet<>(roles));
         userRepository.save(user);
         return userMapper.toUserResponse(user);
     }

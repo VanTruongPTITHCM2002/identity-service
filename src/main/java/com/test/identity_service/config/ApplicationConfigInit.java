@@ -1,7 +1,8 @@
 package com.test.identity_service.config;
 
+import com.test.identity_service.entity.Role;
 import com.test.identity_service.entity.User;
-import com.test.identity_service.enums.Role;
+import com.test.identity_service.repository.RoleRepository;
 import com.test.identity_service.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -23,18 +24,19 @@ public class ApplicationConfigInit {
     PasswordEncoder passwordEncoder;
 
     @Bean
-    ApplicationRunner applicationRunner (UserRepository userRepository){
+    ApplicationRunner applicationRunner (UserRepository userRepository, RoleRepository roleRepository){
         return args -> {
             boolean checkAdmin = userRepository.findByUsername("admin").isEmpty();
             if(checkAdmin){
-                var roles = new HashSet<String>();
-                roles.add(Role.ADMIN.name());
+                var role = roleRepository.findById("ADMIN").orElse(null);
+                var roles = new HashSet<Role>();
+                roles.add(role);
                 User user = User.builder()
                         .username("admin")
                         .firstName("")
                         .lastName("")
                         .password(passwordEncoder.encode("admin"))
-                      //  .roles(roles)
+                        .roles(roles)
                         .build();
             userRepository.save(user);
             log.info("admin has been created with password");

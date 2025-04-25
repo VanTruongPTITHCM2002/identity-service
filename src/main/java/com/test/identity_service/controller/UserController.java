@@ -1,6 +1,7 @@
 package com.test.identity_service.controller;
 
 import com.test.identity_service.dto.request.UserCreationRequest;
+import com.test.identity_service.dto.request.UserUpdateRequest;
 import com.test.identity_service.dto.response.ApiResponse;
 import com.test.identity_service.dto.response.UserResponse;
 import com.test.identity_service.entity.User;
@@ -38,7 +39,8 @@ public class UserController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+   // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('GET_USERS')")
     public ResponseEntity<ApiResponse<List<UserResponse>>> getUsers(){
 
         var authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -62,8 +64,8 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<UserResponse> updateUser (@PathVariable String userId, @RequestBody UserCreationRequest userCreationRequest){
-        UserResponse userResponse = this.iUserService.updateUser(userId,userCreationRequest);
+    public ResponseEntity<UserResponse> updateUser (@PathVariable String userId, @RequestBody UserUpdateRequest userUpdateRequest){
+        UserResponse userResponse = this.iUserService.updateUser(userId,userUpdateRequest);
         return ResponseEntity.ok().body(userResponse);
     }
 

@@ -1,6 +1,7 @@
 package com.test.identity_service.mapper;
 
 import com.test.identity_service.dto.request.UserCreationRequest;
+import com.test.identity_service.dto.request.UserUpdateRequest;
 import com.test.identity_service.dto.response.UserResponse;
 import com.test.identity_service.entity.User;
 import org.mapstruct.Mapper;
@@ -12,5 +13,7 @@ public interface UserMapper {
 
     User toUser(UserCreationRequest userCreationRequest);
     UserResponse toUserResponse(User user);
-    void updateUser(@MappingTarget User user, UserCreationRequest userCreationRequest);
+
+    @Mapping(target = "roles",ignore = true)
+    void updateUser(@MappingTarget User user, UserUpdateRequest userUpdateRequest);
 }

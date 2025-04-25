@@ -1,6 +1,7 @@
 package com.test.identity_service.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.test.identity_service.validation.DobConstraint;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,5 +24,7 @@ public class UserCreationRequest {
     String password;
     String firstName;
     String lastName;
+
+    @DobConstraint(min = 18,message = "INVALID_DOB")
     LocalDate dob;
 }

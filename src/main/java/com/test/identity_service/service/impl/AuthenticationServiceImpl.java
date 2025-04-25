@@ -44,7 +44,7 @@ public class AuthenticationServiceImpl implements IAuthentcationService {
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) throws JOSEException {
         var user = this.userRepository.findByUsername(authenticationRequest.getUsername()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         boolean authenticated =  passwordEncoder.matches( authenticationRequest.getPassword(), user.getPassword());
-
+        System.out.println(user.getRoles());
         if(!authenticated){
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
@@ -91,9 +91,15 @@ public class AuthenticationServiceImpl implements IAuthentcationService {
 
     private String buildScope(User user){
         StringJoiner stringJoiner = new StringJoiner(" ");
-//        if(!CollectionUtils.isEmpty(user.getRoles())){
-//            user.getRoles().forEach(stringJoiner::add);
-//        }
+        if(!CollectionUtils.isEmpty(user.getRoles())){
+            user.getRoles().forEach(role -> {
+                stringJoiner.add("ROLE_" + role.getName());
+                if(!CollectionUtils.isEmpty(role.getPermissions())){
+                    role.getPermissions().forEach(permission -> stringJoiner.add(permission.getName()));
+                }
+
+            });
+        }
         return stringJoiner.toString();
     }
 }
