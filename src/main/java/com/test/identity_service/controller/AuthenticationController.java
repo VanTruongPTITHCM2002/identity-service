@@ -3,6 +3,7 @@ package com.test.identity_service.controller;
 import com.nimbusds.jose.JOSEException;
 import com.test.identity_service.dto.request.AuthenticationRequest;
 import com.test.identity_service.dto.request.InstropectRequest;
+import com.test.identity_service.dto.request.InvalidTokenRequest;
 import com.test.identity_service.dto.response.ApiResponse;
 import com.test.identity_service.dto.response.AuthenticationResponse;
 import com.test.identity_service.dto.response.IntrospectResponse;
@@ -10,6 +11,7 @@ import com.test.identity_service.service.IAuthentcationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,5 +44,16 @@ public class AuthenticationController {
                         .data(result)
                         .build()
         );
+    }
+
+    @PostMapping("/logout")
+    public  ResponseEntity<ApiResponse<Void>> logout (@RequestBody InvalidTokenRequest invalidTokenRequest) throws ParseException, JOSEException {
+                this.iAuthentcationService.logout(invalidTokenRequest);
+                return ResponseEntity.ok().body(
+                        ApiResponse.<Void>builder()
+                                .status(HttpStatus.OK.value())
+                                .message("Sign out successfully")
+                                .build()
+                );
     }
 }
