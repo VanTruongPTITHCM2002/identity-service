@@ -13,11 +13,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -26,6 +29,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
+@TestPropertySource("/test.properties")
 public class UserServiceImplTest {
     @Autowired
     private UserServiceImpl userServiceImpl;
@@ -39,6 +43,7 @@ public class UserServiceImplTest {
     private UserCreationRequest request;
     private UserResponse userResponse;
     private User user;
+    private Role role;
     private LocalDate dob;
 
     @BeforeEach
@@ -63,6 +68,7 @@ public class UserServiceImplTest {
 
 
         user = User.builder()
+                .id("dadsdasddasdads")
                 .username("john")
                 .firstName("John")
                 .lastName("Doe")
@@ -93,5 +99,16 @@ public class UserServiceImplTest {
         // THEN
         Assertions.assertThat(exception.getErrorCode().getCode())
                 .isEqualTo(1001);
+    }
+
+    @Test
+    @WithMockUser(username = "john")
+    void getUser_valid_success(){
+        when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(user));
+
+        var response = userServiceImpl.getUser(user.getId());
+
+        Assertions.assertThat(response.getUsername()).isEqualTo("john");
+
     }
 }
