@@ -35,6 +35,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserResponse addUser(UserCreationRequest userCreationRequest) {
 
+        log.info("USER SERVICE");
        boolean isExistsUsername = this.userRepository.existsByUsername(userCreationRequest.getUsername());
 
        if(isExistsUsername){

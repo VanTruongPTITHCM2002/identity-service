@@ -15,6 +15,7 @@ import java.util.Set;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
 public class UserResponse {
+    String id;
     String username;
     String firstName;
     String lastName;
