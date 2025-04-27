@@ -3,7 +3,6 @@ package com.test.identity_service.config;
 import java.util.HashSet;
 
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,10 +26,10 @@ public class ApplicationConfigInit {
     PasswordEncoder passwordEncoder;
 
     @Bean
-//    @ConditionalOnProperty(
-//            prefix = "spring",
-//            value = "datasource.driverClassName",
-//            havingValue = "com.mysql.cj.jdbc.Driver")
+    //    @ConditionalOnProperty(
+    //            prefix = "spring",
+    //            value = "datasource.driverClassName",
+    //            havingValue = "com.mysql.cj.jdbc.Driver")
     ApplicationRunner applicationRunner(UserRepository userRepository, RoleRepository roleRepository) {
         return args -> {
             boolean checkAdmin = userRepository.findByUsername("admin").isEmpty();

@@ -1,33 +1,33 @@
-//package com.test.identity_service.service.impl;
+// package com.test.identity_service.service.impl;
 //
-//import static org.junit.jupiter.api.Assertions.assertThrows;
-//import static org.mockito.ArgumentMatchers.any;
-//import static org.mockito.ArgumentMatchers.anyString;
-//import static org.mockito.Mockito.when;
+// import static org.junit.jupiter.api.Assertions.assertThrows;
+// import static org.mockito.ArgumentMatchers.any;
+// import static org.mockito.ArgumentMatchers.anyString;
+// import static org.mockito.Mockito.when;
 //
-//import java.time.LocalDate;
-//import java.util.Optional;
+// import java.time.LocalDate;
+// import java.util.Optional;
 //
-//import org.assertj.core.api.Assertions;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.security.test.context.support.WithMockUser;
-//import org.springframework.test.context.TestPropertySource;
-//import org.springframework.test.context.bean.override.mockito.MockitoBean;
+// import org.assertj.core.api.Assertions;
+// import org.junit.jupiter.api.BeforeEach;
+// import org.junit.jupiter.api.Test;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.boot.test.context.SpringBootTest;
+// import org.springframework.security.test.context.support.WithMockUser;
+// import org.springframework.test.context.TestPropertySource;
+// import org.springframework.test.context.bean.override.mockito.MockitoBean;
 //
-//import com.test.identity_service.dto.request.UserCreationRequest;
-//import com.test.identity_service.dto.response.UserResponse;
-//import com.test.identity_service.entity.Role;
-//import com.test.identity_service.entity.User;
-//import com.test.identity_service.exception.AppException;
-//import com.test.identity_service.repository.RoleRepository;
-//import com.test.identity_service.repository.UserRepository;
+// import com.test.identity_service.dto.request.UserCreationRequest;
+// import com.test.identity_service.dto.response.UserResponse;
+// import com.test.identity_service.entity.Role;
+// import com.test.identity_service.entity.User;
+// import com.test.identity_service.exception.AppException;
+// import com.test.identity_service.repository.RoleRepository;
+// import com.test.identity_service.repository.UserRepository;
 //
-//@SpringBootTest
-//@TestPropertySource("/test.properties")
-//public class UserServiceImplTest {
+// @SpringBootTest
+// @TestPropertySource("/test.properties")
+// public class UserServiceImplTest {
 //    @Autowired
 //    private UserServiceImpl userServiceImpl;
 //
@@ -104,4 +104,4 @@
 //
 //        Assertions.assertThat(response.getUsername()).isEqualTo("john");
 //    }
-//}
+// }

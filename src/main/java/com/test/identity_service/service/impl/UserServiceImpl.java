@@ -39,7 +39,6 @@ public class UserServiceImpl implements IUserService {
 
         log.info("USER SERVICE");
 
-
         HashSet<Role> roles = new HashSet<>();
         var role = this.roleRepository.findById("USER").orElse(null);
         roles.add(role);
@@ -47,9 +46,9 @@ public class UserServiceImpl implements IUserService {
         User user = userMapper.toUser(userCreationRequest);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(roles);
-        try{
+        try {
             this.userRepository.save(user);
-        }catch (DataIntegrityViolationException dataIntegrityViolationException){
+        } catch (DataIntegrityViolationException dataIntegrityViolationException) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
 

@@ -12,11 +12,9 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "user",
-        uniqueConstraints = {
-                @UniqueConstraint(name = "uk_users_username", columnNames = "username")
-        }
-)
+@Table(
+        name = "user",
+        uniqueConstraints = {@UniqueConstraint(name = "uk_users_username", columnNames = "username")})
 @Getter
 @Setter
 @AllArgsConstructor
@@ -30,7 +28,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-    @Column(name = "username",unique = true,nullable = false, columnDefinition = "varchar(255) COLLATE utf8mb4_unicode_ci")
+    @Column(
+            name = "username",
+            unique = true,
+            nullable = false,
+            columnDefinition = "varchar(255) COLLATE utf8mb4_unicode_ci")
     String username;
 
     @Column(nullable = false, length = 255)

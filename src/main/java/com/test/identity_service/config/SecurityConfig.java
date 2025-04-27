@@ -14,11 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.reactive.CorsWebFilter;
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
-
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -75,15 +70,15 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public CorsWebFilter corsWebFilter(){
-//        CorsConfiguration corsConfiguration = new CorsConfiguration();
-//        corsConfiguration.setAllowCredentials(true);
-//        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
-//        corsConfiguration.setAllowedMethods(List.of("GET","POST","PUT","DELETE"));
-//        corsConfiguration.setAllowedHeaders(List.of("*"));
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**",corsConfiguration);
-//        return new CorsWebFilter(source);
-//    }
+    //    @Bean
+    //    public CorsWebFilter corsWebFilter(){
+    //        CorsConfiguration corsConfiguration = new CorsConfiguration();
+    //        corsConfiguration.setAllowCredentials(true);
+    //        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
+    //        corsConfiguration.setAllowedMethods(List.of("GET","POST","PUT","DELETE"));
+    //        corsConfiguration.setAllowedHeaders(List.of("*"));
+    //        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    //        source.registerCorsConfiguration("/**",corsConfiguration);
+    //        return new CorsWebFilter(source);
+    //    }
 }
