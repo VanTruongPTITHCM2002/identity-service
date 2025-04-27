@@ -1,11 +1,12 @@
 package com.test.identity_service.validation.validator;
 
-import com.test.identity_service.validation.DobConstraint;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+import com.test.identity_service.validation.DobConstraint;
 
 public class DobConstraintValidator implements ConstraintValidator<DobConstraint, LocalDate> {
 
@@ -19,10 +20,10 @@ public class DobConstraintValidator implements ConstraintValidator<DobConstraint
 
     @Override
     public boolean isValid(LocalDate localDate, ConstraintValidatorContext constraintValidatorContext) {
-        if(localDate == null){
+        if (localDate == null) {
             return true;
         }
-        long years = ChronoUnit.YEARS.between(localDate,LocalDate.now());
+        long years = ChronoUnit.YEARS.between(localDate, LocalDate.now());
 
         return years >= min;
     }

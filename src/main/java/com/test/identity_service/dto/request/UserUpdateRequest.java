@@ -1,11 +1,12 @@
 package com.test.identity_service.dto.request;
 
-import com.test.identity_service.validation.DobConstraint;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.time.LocalDate;
 import java.util.List;
+
+import com.test.identity_service.validation.DobConstraint;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
@@ -16,7 +17,9 @@ public class UserUpdateRequest {
     String password;
     String firstName;
     String lastName;
-    @DobConstraint(min = 18,message = "INVALID_DOB")
+
+    @DobConstraint(min = 18, message = "INVALID_DOB")
     LocalDate dob;
+
     List<String> roles;
 }

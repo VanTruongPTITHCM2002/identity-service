@@ -1,16 +1,9 @@
 package com.test.identity_service.controller;
 
-import com.test.identity_service.dto.request.UserCreationRequest;
-import com.test.identity_service.dto.request.UserUpdateRequest;
-import com.test.identity_service.dto.response.ApiResponse;
-import com.test.identity_service.dto.response.UserResponse;
-import com.test.identity_service.entity.User;
-import com.test.identity_service.service.IUserService;
+import java.util.List;
+
 import jakarta.validation.Valid;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -18,7 +11,16 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.test.identity_service.dto.request.UserCreationRequest;
+import com.test.identity_service.dto.request.UserUpdateRequest;
+import com.test.identity_service.dto.response.ApiResponse;
+import com.test.identity_service.dto.response.UserResponse;
+import com.test.identity_service.service.IUserService;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -29,8 +31,9 @@ public class UserController {
     IUserService iUserService;
 
     @PostMapping
-//    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<UserResponse>> addUser(@RequestBody @Valid UserCreationRequest userCreationRequest){
+    //    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<UserResponse>> addUser(
+            @RequestBody @Valid UserCreationRequest userCreationRequest) {
         log.info("Controller: addUSER - POST");
 
         UserResponse userResponse = this.iUserService.addUser(userCreationRequest);
@@ -39,13 +42,13 @@ public class UserController {
                         .status(201)
                         .message("Created User successfully")
                         .data(userResponse)
-                .build());
+                        .build());
     }
 
     @GetMapping
-   // @PreAuthorize("hasRole('ADMIN')")
+    // @PreAuthorize("hasRole('ADMIN')")
     @PreAuthorize("hasAuthority('GET_USERS')")
-    public ResponseEntity<ApiResponse<List<UserResponse>>> getUsers(){
+    public ResponseEntity<ApiResponse<List<UserResponse>>> getUsers() {
 
         var authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -53,29 +56,30 @@ public class UserController {
         authentication.getAuthorities().forEach(System.out::println);
 
         List<UserResponse> userResponseList = this.iUserService.getUsers();
-        return ResponseEntity.ok().body(ApiResponse.<List<UserResponse>>builder()
+        return ResponseEntity.ok()
+                .body(ApiResponse.<List<UserResponse>>builder()
                         .status(HttpStatus.OK.value())
                         .message("Get Users successfully")
                         .data(userResponseList)
-                .build());
+                        .build());
     }
 
     @GetMapping("/{userId}")
     @PostAuthorize("hasRole('ADMIN') || returnObject.body.username == authentication.name")
-    public ResponseEntity<UserResponse> getUser (@PathVariable String userId){
+    public ResponseEntity<UserResponse> getUser(@PathVariable String userId) {
         UserResponse userResponse = this.iUserService.getUser(userId);
         return ResponseEntity.ok().body(userResponse);
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<UserResponse> updateUser (@PathVariable String userId, @RequestBody UserUpdateRequest userUpdateRequest){
-        UserResponse userResponse = this.iUserService.updateUser(userId,userUpdateRequest);
+    public ResponseEntity<UserResponse> updateUser(
+            @PathVariable String userId, @RequestBody UserUpdateRequest userUpdateRequest) {
+        UserResponse userResponse = this.iUserService.updateUser(userId, userUpdateRequest);
         return ResponseEntity.ok().body(userResponse);
     }
 
-
     @DeleteMapping("/{userId}")
-    public ResponseEntity<UserResponse> deleteUser(@PathVariable String userId){
+    public ResponseEntity<UserResponse> deleteUser(@PathVariable String userId) {
         UserResponse userResponse = this.iUserService.deleteUser(userId);
         return ResponseEntity.ok().body(null);
     }

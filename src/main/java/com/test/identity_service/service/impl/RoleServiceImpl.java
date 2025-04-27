@@ -1,5 +1,9 @@
 package com.test.identity_service.service.impl;
 
+import java.util.HashSet;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
 
 import com.test.identity_service.dto.request.RoleRequest;
 import com.test.identity_service.dto.response.RoleResponse;
@@ -7,18 +11,14 @@ import com.test.identity_service.mapper.RoleMapper;
 import com.test.identity_service.repository.PermissionRepository;
 import com.test.identity_service.repository.RoleRepository;
 import com.test.identity_service.service.IRoleService;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Service;
-
-import java.util.HashSet;
-import java.util.List;
-
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RoleServiceImpl implements IRoleService {
 
     RoleRepository roleRepository;
@@ -37,8 +37,8 @@ public class RoleServiceImpl implements IRoleService {
 
     @Override
     public List<RoleResponse> getAll() {
-        return this.roleRepository.findAll()
-                .stream().map(roleMapper::toRoleResponse)
+        return this.roleRepository.findAll().stream()
+                .map(roleMapper::toRoleResponse)
                 .toList();
     }
 

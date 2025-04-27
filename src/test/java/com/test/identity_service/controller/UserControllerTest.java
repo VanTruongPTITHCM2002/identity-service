@@ -1,11 +1,7 @@
 package com.test.identity_service.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.test.identity_service.dto.request.UserCreationRequest;
-import com.test.identity_service.dto.response.UserResponse;
-import com.test.identity_service.service.IUserService;
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -20,7 +16,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.time.LocalDate;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.test.identity_service.dto.request.UserCreationRequest;
+import com.test.identity_service.dto.response.UserResponse;
+import com.test.identity_service.service.IUserService;
+
+import lombok.extern.slf4j.Slf4j;
 
 @SpringBootTest
 @Slf4j
@@ -39,9 +41,9 @@ public class UserControllerTest {
     private LocalDate dob;
 
     @BeforeEach
-    void initData(){
+    void initData() {
 
-        dob = LocalDate.of(1990,1,1);
+        dob = LocalDate.of(1990, 1, 1);
 
         request = UserCreationRequest.builder()
                 .username("john")
@@ -61,32 +63,34 @@ public class UserControllerTest {
 
     @Test
     void addUser_validRequest_success() throws Exception {
-        //GIVEN
+        // GIVEN
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         String content = objectMapper.writeValueAsString(request);
 
         Mockito.when(iUserService.addUser(ArgumentMatchers.any())).thenReturn(userResponse);
-        //WHEN, THEN
-            mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .content(content)).andExpect(MockMvcResultMatchers.status().isCreated())
-                    .andExpect(MockMvcResultMatchers.jsonPath("data.username").value("john"));
+        // WHEN, THEN
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(content))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("data.username").value("john"));
     }
 
     @Test
     void addUser_usernameInvalid_fail() throws Exception {
-        //GIVEN
+        // GIVEN
         request.setUsername("j");
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         String content = objectMapper.writeValueAsString(request);
 
-     //   Mockito.when(iUserService.addUser(ArgumentMatchers.any())).thenReturn(userResponse);
-        //WHEN, THEN
+        //   Mockito.when(iUserService.addUser(ArgumentMatchers.any())).thenReturn(userResponse);
+        // WHEN, THEN
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(content)).andExpect(MockMvcResultMatchers.status().isBadRequest())
+                        .content(content))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("status").value(1003))
                 .andExpect(MockMvcResultMatchers.jsonPath("message").value("Username must be at least 3 characters"));
     }
