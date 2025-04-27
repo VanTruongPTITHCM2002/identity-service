@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.test.identity_service.IdentityServiceApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.184 s -- in com.test.identity_service.IdentityServiceApplicationTests

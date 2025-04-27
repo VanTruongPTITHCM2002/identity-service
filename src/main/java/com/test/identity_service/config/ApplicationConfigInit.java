@@ -27,10 +27,10 @@ public class ApplicationConfigInit {
     PasswordEncoder passwordEncoder;
 
     @Bean
-    @ConditionalOnProperty(
-            prefix = "spring",
-            value = "datasource.driverClassName",
-            havingValue = "com.mysql.cj.jdbc.Driver")
+//    @ConditionalOnProperty(
+//            prefix = "spring",
+//            value = "datasource.driverClassName",
+//            havingValue = "com.mysql.cj.jdbc.Driver")
     ApplicationRunner applicationRunner(UserRepository userRepository, RoleRepository roleRepository) {
         return args -> {
             boolean checkAdmin = userRepository.findByUsername("admin").isEmpty();

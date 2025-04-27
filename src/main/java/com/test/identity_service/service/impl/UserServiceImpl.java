@@ -3,6 +3,7 @@ package com.test.identity_service.service.impl;
 import java.util.HashSet;
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,11 +38,7 @@ public class UserServiceImpl implements IUserService {
     public UserResponse addUser(UserCreationRequest userCreationRequest) {
 
         log.info("USER SERVICE");
-        boolean isExistsUsername = this.userRepository.existsByUsername(userCreationRequest.getUsername());
 
-        if (isExistsUsername) {
-            throw new AppException(ErrorCode.USER_EXISTED);
-        }
 
         HashSet<Role> roles = new HashSet<>();
         var role = this.roleRepository.findById("USER").orElse(null);
@@ -50,7 +47,12 @@ public class UserServiceImpl implements IUserService {
         User user = userMapper.toUser(userCreationRequest);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(roles);
-        userRepository.save(user);
+        try{
+            this.userRepository.save(user);
+        }catch (DataIntegrityViolationException dataIntegrityViolationException){
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
+
         return userMapper.toUserResponse(user);
     }
 
